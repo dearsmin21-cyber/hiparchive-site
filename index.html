@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OSINT Mock Studio</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=IBM+Plex+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="background-glow" aria-hidden="true"></div>
+
+    <main class="shell">
+      <header class="hero fade-up">
+        <p class="badge">OPENAI STYLE CONCEPT</p>
+        <h1>Instagram OSINT Mock Console</h1>
+        <p class="sub">
+          이 화면은 데모 전용입니다. 실제 인스타그램 데이터 수집/조회는 수행하지 않으며,
+          모든 결과는 랜덤 모의 데이터입니다.
+        </p>
+      </header>
+
+      <section class="control-panel fade-up delay-1">
+        <label for="target" class="label">Target Handle</label>
+        <div class="input-row">
+          <span class="at">@</span>
+          <input id="target" type="text" placeholder="example_user" maxlength="30" />
+          <button id="scanBtn" type="button">모의 스캔 시작</button>
+        </div>
+        <p class="hint">실제 조회 없음 · Demo Mode Only</p>
+      </section>
+
+      <section class="status-grid fade-up delay-2">
+        <article class="card">
+          <h2>Scan Status</h2>
+          <div class="status-line">
+            <span id="statusDot" class="dot idle"></span>
+            <p id="statusText">대기 중</p>
+          </div>
+          <div class="progress-wrap">
+            <div id="progressBar" class="progress"></div>
+          </div>
+        </article>
+
+        <article class="card metrics">
+          <h2>Mock Metrics</h2>
+          <div class="metric-list">
+            <div>
+              <p class="k">Profile Exposure</p>
+              <p id="metricExposure" class="v">--</p>
+            </div>
+            <div>
+              <p class="k">Activity Pattern</p>
+              <p id="metricActivity" class="v">--</p>
+            </div>
+            <div>
+              <p class="k">Network Density</p>
+              <p id="metricNetwork" class="v">--</p>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <section class="results fade-up delay-3">
+        <article class="card">
+          <div class="card-head">
+            <h2>Signal Timeline (Mock)</h2>
+            <span class="chip">SIMULATED</span>
+          </div>
+          <ul id="timeline" class="timeline"></ul>
+        </article>
+
+        <article class="card">
+          <div class="card-head">
+            <h2>Generated Summary</h2>
+            <span class="chip">LOCAL ONLY</span>
+          </div>
+          <p id="summary" class="summary">
+            모의 스캔을 실행하면 요약이 생성됩니다.
+          </p>
+        </article>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

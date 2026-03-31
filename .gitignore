@@ -1,0 +1,8 @@
+node_modules
+.next
+out
+.DS_Store
+
+public/videos/final-cut.mp4
+public/videos/orange.mp4
+.env.local
