@@ -797,45 +797,55 @@ export default function Page() {
                 <div className={styles.mobilePlanPickerLabel}>구매 플랜 선택</div>
                 <div className={styles.mobilePlanPickerHint}>선택한 플랜으로 결제 페이지가 열립니다.</div>
               </div>
-              <div className={styles.mobilePlanPickerActions}>
-                <div className={styles.mobilePlanPickerPriceBlock}>
-                  <strong className={styles.mobilePlanPickerPrice}>{activePackage.price}</strong>
-                  {activePackage.originalPrice ? (
-                    <div className={styles.mobilePlanPickerPriceMeta}>
-                      {activePackage.originalPrice}
-                    </div>
-                  ) : null}
-                </div>
-                <button
-                  type="button"
-                  className={styles.mobilePlanPickerClose}
-                  aria-label="플랜 선택 닫기"
-                  onClick={() => setShowMobilePackagePicker(false)}
+              <button
+                type="button"
+                className={styles.mobilePlanPickerClose}
+                aria-label="플랜 선택 닫기"
+                onClick={() => setShowMobilePackagePicker(false)}
+              >
+                <svg
+                  className={styles.mobilePlanPickerCloseIcon}
+                  viewBox="0 0 16 16"
+                  fill="none"
+                  aria-hidden="true"
                 >
-                  <span className={styles.mobilePlanPickerCloseLine} aria-hidden="true" />
-                  <span className={styles.mobilePlanPickerCloseLine} aria-hidden="true" />
-                </button>
-              </div>
+                  <path
+                    d="M4 4l8 8M12 4 4 12"
+                    stroke="currentColor"
+                    strokeWidth="1.8"
+                    strokeLinecap="round"
+                  />
+                </svg>
+              </button>
+            </div>
+
+            {activePackage.benefitLabel ? (
+              <div className={styles.mobilePlanPickerBenefit}>{activePackage.benefitLabel}</div>
+            ) : null}
+
+            <div className={styles.mobilePlanPickerPriceRow}>
+              <strong className={styles.mobilePlanPickerPrice}>{activePackage.price}</strong>
+              {activePackage.originalPrice ? (
+                <span className={styles.mobilePlanPickerOriginalPrice}>
+                  {activePackage.originalPrice}
+                </span>
+              ) : null}
             </div>
 
             <div className={styles.mobilePlanSelectWrap}>
-              {activePackage.benefitLabel ? (
-                <div className={styles.mobilePlanSelectBenefit}>{activePackage.benefitLabel}</div>
-              ) : null}
               <select
+                id="mobile-plan-select"
                 className={styles.mobilePlanSelect}
                 value={selectedPackage}
                 onChange={(event) => setSelectedPackage(event.target.value)}
-                aria-label="모바일 구매 플랜 선택"
               >
                 {packages.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name} · {item.price}
-                    {item.benefitLabel ? " · 10% 할인" : ""}
+                    {item.benefitLabel ? ` · ${item.benefitLabel}` : ""}
                   </option>
                 ))}
               </select>
-              <span className={styles.mobilePlanSelectIcon} aria-hidden="true" />
             </div>
           </div>
 
