@@ -1,3 +1,5 @@
+@import url("https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css");
+
 :root {
   color-scheme: light;
 }
@@ -8,6 +10,7 @@
 
 html {
   scroll-behavior: smooth;
+  font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
 }
 
 body {
@@ -15,7 +18,9 @@ body {
   min-height: 100vh;
   background: #ffffff;
   color: #222222;
-  font-family: "Pretendard", "Noto Sans KR", "Apple SD Gothic Neo", "Segoe UI", sans-serif;
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 a {
@@ -28,6 +33,7 @@ input,
 textarea,
 select {
   font: inherit;
+  font-family: inherit;
 }
 
 button {
