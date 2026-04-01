@@ -47,6 +47,11 @@ export const metadata = {
       "max-video-preview": -1,
     },
   },
+  verification: {
+    other: {
+      "naver-site-verification": "6919c0a8054e6cb50875121b4eee54f94d99df86",
+    },
+  },
   icons: {
     icon: "/icon.png",
     shortcut: "/icon.png",
