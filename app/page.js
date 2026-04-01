@@ -293,6 +293,7 @@ export default function Page() {
     0,
     packages.findIndex((item) => item.id === activePackage.id),
   );
+  const shouldShowMobileInquiryHint = showMobileInquiryHint && !showMobilePackagePicker;
 
   function handlePurchase(packageId = activePackage.id) {
     const targetPackage =
@@ -330,7 +331,14 @@ export default function Page() {
     const updateVisibility = () => {
       const isMobile = window.innerWidth <= 860;
       const threshold = window.innerHeight * 0.08;
-      setShowMobileInquiryHint(!isMobile || window.scrollY <= threshold);
+      const scrollTop =
+        window.scrollY ||
+        window.pageYOffset ||
+        document.documentElement.scrollTop ||
+        document.body.scrollTop ||
+        0;
+
+      setShowMobileInquiryHint(!isMobile || scrollTop <= threshold);
     };
 
     const handleScroll = () => {
@@ -894,11 +902,16 @@ export default function Page() {
 
           <div className={styles.mobileInquiryWrap}>
             <div
-              className={`${styles.mobileInquiryHint} ${
-                !showMobileInquiryHint || showMobilePackagePicker
-                  ? styles.mobileInquiryHintHidden
-                  : ""
-              }`}
+              className={styles.mobileInquiryHint}
+              aria-hidden={!shouldShowMobileInquiryHint}
+              style={{
+                opacity: shouldShowMobileInquiryHint ? 1 : 0,
+                visibility: shouldShowMobileInquiryHint ? "visible" : "hidden",
+                pointerEvents: shouldShowMobileInquiryHint ? "auto" : "none",
+                transform: shouldShowMobileInquiryHint
+                  ? "translateX(-50%) translateY(0)"
+                  : "translateX(-50%) translateY(8px) scale(0.96)",
+              }}
             >
               평균 응답 10분 이내
             </div>
