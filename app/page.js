@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { siteConfig } from "./lib/site";
 import styles from "./page.module.css";
 
@@ -276,21 +276,27 @@ function MainPreviewImage() {
 
 export default function Page() {
   const [selectedPackage, setSelectedPackage] = useState("standard");
+  const [mobileSelectedPackage, setMobileSelectedPackage] = useState("standard");
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [showAllVideos, setShowAllVideos] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMobileServiceDetails, setShowMobileServiceDetails] = useState(false);
   const [showMobilePackagePicker, setShowMobilePackagePicker] = useState(false);
+  const [showMobileInquiryHint, setShowMobileInquiryHint] = useState(true);
 
   const activePackage =
     packages.find((item) => item.id === selectedPackage) || packages[0];
+  const mobileActivePackage =
+    packages.find((item) => item.id === mobileSelectedPackage) || activePackage;
   const activePackageIndex = Math.max(
     0,
     packages.findIndex((item) => item.id === activePackage.id),
   );
 
-  function handlePurchase() {
-    const optionId = activePackage?.optionId;
+  function handlePurchase(packageId = activePackage.id) {
+    const targetPackage =
+      packages.find((item) => item.id === packageId) || activePackage;
+    const optionId = targetPackage?.optionId;
     const targetUrl = new URL(checkoutBaseUrl);
     if (optionId) {
       targetUrl.searchParams.set("option_id", optionId);
@@ -306,11 +312,47 @@ export default function Page() {
 
   function handleMobilePurchase() {
     if (typeof window !== "undefined" && window.innerWidth <= 860 && !showMobilePackagePicker) {
+      setMobileSelectedPackage(selectedPackage);
       setShowMobilePackagePicker(true);
       return;
     }
-    handlePurchase();
+    handlePurchase(mobileSelectedPackage);
   }
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    let ticking = false;
+
+    const updateVisibility = () => {
+      const isMobile = window.innerWidth <= 860;
+      const threshold = window.innerHeight * 0.08;
+      setShowMobileInquiryHint(!isMobile || window.scrollY <= threshold);
+    };
+
+    const handleScroll = () => {
+      if (ticking) {
+        return;
+      }
+
+      ticking = true;
+      window.requestAnimationFrame(() => {
+        updateVisibility();
+        ticking = false;
+      });
+    };
+
+    updateVisibility();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
+  }, []);
 
   return (
     <main className={styles.page}>
@@ -819,15 +861,15 @@ export default function Page() {
               </button>
             </div>
 
-            {activePackage.benefitLabel ? (
-              <div className={styles.mobilePlanPickerBenefit}>{activePackage.benefitLabel}</div>
+            {mobileActivePackage.benefitLabel ? (
+              <div className={styles.mobilePlanPickerBenefit}>{mobileActivePackage.benefitLabel}</div>
             ) : null}
 
             <div className={styles.mobilePlanPickerPriceRow}>
-              <strong className={styles.mobilePlanPickerPrice}>{activePackage.price}</strong>
-              {activePackage.originalPrice ? (
+              <strong className={styles.mobilePlanPickerPrice}>{mobileActivePackage.price}</strong>
+              {mobileActivePackage.originalPrice ? (
                 <span className={styles.mobilePlanPickerOriginalPrice}>
-                  {activePackage.originalPrice}
+                  {mobileActivePackage.originalPrice}
                 </span>
               ) : null}
             </div>
@@ -836,8 +878,8 @@ export default function Page() {
               <select
                 id="mobile-plan-select"
                 className={styles.mobilePlanSelect}
-                value={selectedPackage}
-                onChange={(event) => setSelectedPackage(event.target.value)}
+                value={mobileSelectedPackage}
+                onChange={(event) => setMobileSelectedPackage(event.target.value)}
               >
                 {packages.map((item) => (
                   <option key={item.id} value={item.id}>
@@ -850,9 +892,15 @@ export default function Page() {
           </div>
 
           <div className={styles.mobileInquiryWrap}>
-            {!showMobilePackagePicker ? (
-              <div className={styles.mobileInquiryHint}>평균 응답 10분 이내</div>
-            ) : null}
+            <div
+              className={`${styles.mobileInquiryHint} ${
+                !showMobileInquiryHint || showMobilePackagePicker
+                  ? styles.mobileInquiryHintHidden
+                  : ""
+              }`}
+            >
+              평균 응답 10분 이내
+            </div>
             <button
               className={`${styles.ghostButton} ${styles.mobileGhostButton}`}
               type="button"
