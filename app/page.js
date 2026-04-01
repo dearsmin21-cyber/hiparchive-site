@@ -176,7 +176,9 @@ const packages = [
     id: "deluxe",
     optionId: "69c4ea44be57430b853f23e4",
     name: "DELUXE",
-    price: "60,000원",
+    price: "56,700원",
+    originalPrice: "63,000원",
+    benefitLabel: "기간 한정 10% 할인",
     subtitle: "High 퀄리티 리릭비디오 작업",
     description:
       "음원과 어울리는 리릭비디오를 전문적으로 작업합니다. 광범위한 디자인적 요소를 사용합니다.",
@@ -188,7 +190,9 @@ const packages = [
     id: "premium",
     optionId: "69c4ea44be57430b853f23e5",
     name: "PREMIUM",
-    price: "85,000원",
+    price: "81,000원",
+    originalPrice: "90,000원",
+    benefitLabel: "기간 한정 10% 할인",
     subtitle: "High 퀄리티 리릭비디오 패키지",
     description:
       "숏폼 + 풀버전 리릭비디오를 올인원으로 작업해드립니다. 광범위한 디자인적 요소를 사용합니다.",
@@ -663,7 +667,15 @@ export default function Page() {
             </div>
 
             <div className={styles.packageBody}>
-              <div className={styles.packagePrice}>{activePackage.price}</div>
+              {activePackage.benefitLabel ? (
+                <div className={styles.packageBenefit}>{activePackage.benefitLabel}</div>
+              ) : null}
+              <div className={styles.packagePriceRow}>
+                <div className={styles.packagePrice}>{activePackage.price}</div>
+                {activePackage.originalPrice ? (
+                  <div className={styles.packageOriginalPrice}>{activePackage.originalPrice}</div>
+                ) : null}
+              </div>
               <div className={styles.packageSubtitle}>{activePackage.subtitle}</div>
               <p className={styles.packageDescription}>{activePackage.description}</p>
 
@@ -786,7 +798,14 @@ export default function Page() {
                 <div className={styles.mobilePlanPickerHint}>선택한 플랜으로 결제 페이지가 열립니다.</div>
               </div>
               <div className={styles.mobilePlanPickerActions}>
-                <strong className={styles.mobilePlanPickerPrice}>{activePackage.price}</strong>
+                <div className={styles.mobilePlanPickerPriceBlock}>
+                  <strong className={styles.mobilePlanPickerPrice}>{activePackage.price}</strong>
+                  {activePackage.originalPrice ? (
+                    <div className={styles.mobilePlanPickerPriceMeta}>
+                      {activePackage.originalPrice}
+                    </div>
+                  ) : null}
+                </div>
                 <button
                   type="button"
                   className={styles.mobilePlanPickerClose}
@@ -800,6 +819,9 @@ export default function Page() {
             </div>
 
             <div className={styles.mobilePlanSelectWrap}>
+              {activePackage.benefitLabel ? (
+                <div className={styles.mobilePlanSelectBenefit}>{activePackage.benefitLabel}</div>
+              ) : null}
               <select
                 className={styles.mobilePlanSelect}
                 value={selectedPackage}
@@ -808,7 +830,8 @@ export default function Page() {
               >
                 {packages.map((item) => (
                   <option key={item.id} value={item.id}>
-                    {item.name} · {item.subtitle}
+                    {item.name} · {item.price}
+                    {item.benefitLabel ? " · 10% 할인" : ""}
                   </option>
                 ))}
               </select>
