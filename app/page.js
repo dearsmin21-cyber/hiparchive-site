@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { siteConfig } from "./lib/site";
 import styles from "./page.module.css";
@@ -11,7 +12,7 @@ const navItems = [
 ];
 const checkoutBaseUrl = "https://www.latpeed.com/products/ExM3O/pay?theme=light";
 const inquiryUrl = "http://pf.kakao.com/_cxnmMX/chat";
-const heroImageUrl = siteConfig.ogImage;
+const heroImageUrl = siteConfig.heroImage;
 
 const showcaseVideos = [
   {
@@ -924,6 +925,11 @@ export default function Page() {
       <footer className={styles.footer}>
         <div className={styles.footerInner}>
           <strong className={styles.footerName}>HipArchive</strong>
+          <div className={styles.footerLinks}>
+            <Link href="/trust" className={styles.footerLink}>
+              신뢰 안내
+            </Link>
+          </div>
           <p className={styles.footerMeta}>
             결제는 외부 결제 페이지를 통해 진행됩니다. 최종 작업 범위와 일정은 상담 내용에 따라
             조정될 수 있습니다.
