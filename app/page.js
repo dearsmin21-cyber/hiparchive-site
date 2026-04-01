@@ -732,9 +732,13 @@ export default function Page() {
                 {activePackage.id === "deluxe" ? (
                   <span className={styles.packageTrustAccent}>가장 많이 선택되는 플랜</span>
                 ) : (
-                  <span>최근 30일 기준 12건 작업</span>
+                  <span>
+                    최근 30일 기준 {activePackage.id === "premium" ? "6건 이상" : "12건 작업"}
+                  </span>
                 )}
-                <span>평균 작업 24시간 이내</span>
+                <span>
+                  평균 작업 {activePackage.id === "premium" ? "2일" : "24시간"} 이내
+                </span>
               </div>
               <p className={styles.packageDescription}>{activePackage.description}</p>
 
