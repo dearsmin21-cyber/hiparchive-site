@@ -16,12 +16,21 @@ const heroImageUrl = siteConfig.ogImage;
 const showcaseVideos = [
   {
     src: "https://player.vimeo.com/video/1178139945?title=0&byline=0&portrait=0",
+    title: "풀버전 리릭비디오 작업 예시",
+    description:
+      "곡 분위기에 맞춰 타이포와 가사 타이밍을 정교하게 구성한 고퀄리티 리릭비디오 제작 예시입니다.",
   },
   {
     src: "https://player.vimeo.com/video/1178140082?title=0&byline=0&portrait=0",
+    title: "무드 중심 리릭비디오 작업 예시",
+    description:
+      "앨범커버와 배경 무드를 중심으로 화면 톤을 맞춘 lyric video 작업 예시입니다.",
   },
   {
     src: "https://player.vimeo.com/video/1178140001?title=0&byline=0&portrait=0",
+    title: "숏폼 확장형 리릭비디오 예시",
+    description:
+      "메인 리릭비디오 흐름을 유지하면서 릴스·쇼츠형 활용까지 고려한 작업 예시입니다.",
   },
 ];
 
@@ -63,6 +72,22 @@ const faqItems = [
   {
     question: "수정은 몇 번까지 가능한가요?",
     answer: "선택하신 패키지에 따라 수정 횟수가 다르며, 기본적으로 작업 방향이 크게 벗어나지 않는 선에서 반영해드립니다.",
+  },
+  {
+    question: "앨범커버만 있어도 리릭비디오 제작이 가능한가요?",
+    answer: "가능합니다. 앨범커버와 곡 무드만 있어도 전체 화면 방향을 잡아 리릭비디오를 제작할 수 있으며, 배경이 필요하면 별도로 구성해드립니다.",
+  },
+  {
+    question: "리릭비디오 제작 비용은 어떻게 정해지나요?",
+    answer: "작업 길이, 화면 구성 난이도, 숏폼 포함 여부에 따라 패키지가 나뉘며, 기본 패키지 외 커스텀 작업은 상담 후 안내드립니다.",
+  },
+  {
+    question: "유튜브 업로드용과 숏폼용을 함께 제작할 수 있나요?",
+    answer: "가능합니다. 메인 풀버전 리릭비디오를 중심으로 릴스·쇼츠형 숏폼까지 함께 구성할 수 있어 채널 운영 흐름에 맞춰 작업이 가능합니다.",
+  },
+  {
+    question: "가사 타이밍은 자동으로 맞추나요?",
+    answer: "아닙니다. 가사 타임라인은 곡의 분위기와 화면 전환에 맞춰 수작업으로 정리하고 있어 결과물 완성도를 더 높이는 방식으로 진행합니다.",
   },
 ];
 
@@ -110,21 +135,21 @@ const reviewItems = [
     rating: "4.9",
     timeline: "작업 기간 2일",
     amount: "주문 금액 5~10만원",
-    text: "가사 타이밍과 화면 전환을 정말 섬세하게 맞춰주셔서 곡 분위기가 훨씬 또렷하게 살아났어요.",
+    text: "발매 예정 싱글의 분위기에 맞춰 가사 타이밍과 화면 전환을 섬세하게 정리해주셔서, 곡의 몰입감이 훨씬 또렷하게 살아난 리릭비디오 결과물이 나왔습니다.",
   },
   {
     author: "rnbarchive",
     rating: "5.0",
     timeline: "작업 기간 1일",
     amount: "주문 금액 5만원 미만",
-    text: "응답이 빠르고 수정 반영도 깔끔해서 작업 스트레스 없이 진행했습니다. 결과물도 만족스러웠습니다.",
+    text: "티저용 숏폼 리릭비디오가 필요했는데 응답이 빠르고 수정 반영도 깔끔해서 일정 맞추기가 수월했습니다. 짧은 영상인데도 완성도가 높았습니다.",
   },
   {
     author: "moodlabel",
     rating: "4.8",
     timeline: "작업 기간 3일",
     amount: "주문 금액 5~10만원",
-    text: "숏폼과 풀버전 톤을 자연스럽게 이어주셔서 채널 전체 무드가 정돈된 느낌으로 완성됐습니다.",
+    text: "풀버전 리릭비디오와 숏폼 활용본의 톤을 자연스럽게 이어주셔서 채널 전체 무드가 정돈됐고, 앨범커버 중심 비주얼도 잘 살아났습니다.",
   },
 ];
 
@@ -210,6 +235,29 @@ const homepageStructuredData = [
         "@type": "Answer",
         text: item.answer,
       },
+    })),
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "리릭비디오 제작",
+    serviceType: "고퀄리티 리릭비디오 및 가사 영상 제작",
+    provider: {
+      "@type": "Organization",
+      name: siteConfig.name,
+      url: siteConfig.url,
+    },
+    areaServed: "KR",
+    url: siteConfig.url,
+    description: siteConfig.description,
+    offers: packages.map((item) => ({
+      "@type": "Offer",
+      name: item.subtitle,
+      priceCurrency: "KRW",
+      price: item.price.replace(/[^\d]/g, ""),
+      description: item.description,
+      availability: "https://schema.org/InStock",
+      url: siteConfig.url,
     })),
   },
 ];
@@ -455,7 +503,7 @@ export default function Page() {
                   <iframe
                     className={styles.videoShowcasePlayer}
                     src={item.src}
-                    title="Vimeo video player"
+                    title={item.title}
                     allow="autoplay; fullscreen; picture-in-picture"
                     allowFullScreen
                   />
@@ -474,7 +522,7 @@ export default function Page() {
                     <iframe
                       className={styles.videoShowcasePlayer}
                       src={item.src}
-                      title="Vimeo video player"
+                      title={item.title}
                       allow="autoplay; fullscreen; picture-in-picture"
                       allowFullScreen
                     />
