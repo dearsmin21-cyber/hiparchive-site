@@ -276,6 +276,7 @@ export default function Page() {
   const [showAllVideos, setShowAllVideos] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMobileServiceDetails, setShowMobileServiceDetails] = useState(false);
+  const [showMobilePackagePicker, setShowMobilePackagePicker] = useState(false);
 
   const activePackage =
     packages.find((item) => item.id === selectedPackage) || packages[0];
@@ -290,11 +291,21 @@ export default function Page() {
     if (optionId) {
       targetUrl.searchParams.set("option_id", optionId);
     }
+    setShowMobilePackagePicker(false);
     window.location.href = targetUrl.toString();
   }
 
   function handleInquiry() {
+    setShowMobilePackagePicker(false);
     window.location.href = inquiryUrl;
+  }
+
+  function handleMobilePurchase() {
+    if (typeof window !== "undefined" && window.innerWidth <= 860 && !showMobilePackagePicker) {
+      setShowMobilePackagePicker(true);
+      return;
+    }
+    handlePurchase();
   }
 
   return (
@@ -763,8 +774,52 @@ export default function Page() {
 
       <div className={styles.mobileActionBar}>
         <div className={styles.mobileActionBarInner}>
+          <div
+            id="mobile-plan-picker"
+            className={`${styles.mobilePlanPicker} ${
+              showMobilePackagePicker ? styles.mobilePlanPickerOpen : ""
+            }`}
+          >
+            <div className={styles.mobilePlanPickerTop}>
+              <div>
+                <div className={styles.mobilePlanPickerLabel}>구매 플랜 선택</div>
+                <div className={styles.mobilePlanPickerHint}>선택한 플랜으로 결제 페이지가 열립니다.</div>
+              </div>
+              <div className={styles.mobilePlanPickerActions}>
+                <strong className={styles.mobilePlanPickerPrice}>{activePackage.price}</strong>
+                <button
+                  type="button"
+                  className={styles.mobilePlanPickerClose}
+                  aria-label="플랜 선택 닫기"
+                  onClick={() => setShowMobilePackagePicker(false)}
+                >
+                  <span className={styles.mobilePlanPickerCloseLine} aria-hidden="true" />
+                  <span className={styles.mobilePlanPickerCloseLine} aria-hidden="true" />
+                </button>
+              </div>
+            </div>
+
+            <div className={styles.mobilePlanSelectWrap}>
+              <select
+                className={styles.mobilePlanSelect}
+                value={selectedPackage}
+                onChange={(event) => setSelectedPackage(event.target.value)}
+                aria-label="모바일 구매 플랜 선택"
+              >
+                {packages.map((item) => (
+                  <option key={item.id} value={item.id}>
+                    {item.name} · {item.subtitle}
+                  </option>
+                ))}
+              </select>
+              <span className={styles.mobilePlanSelectIcon} aria-hidden="true" />
+            </div>
+          </div>
+
           <div className={styles.mobileInquiryWrap}>
-            <div className={styles.mobileInquiryHint}>평균 응답 10분 이내</div>
+            {!showMobilePackagePicker ? (
+              <div className={styles.mobileInquiryHint}>평균 응답 10분 이내</div>
+            ) : null}
             <button
               className={`${styles.ghostButton} ${styles.mobileGhostButton}`}
               type="button"
@@ -776,7 +831,9 @@ export default function Page() {
           <button
             className={`${styles.purchaseButton} ${styles.mobilePurchaseButton}`}
             type="button"
-            onClick={handlePurchase}
+            onClick={handleMobilePurchase}
+            aria-expanded={showMobilePackagePicker}
+            aria-controls="mobile-plan-picker"
           >
             구매하기
           </button>
