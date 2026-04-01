@@ -9,6 +9,7 @@ const navItems = [
   { label: "FAQ", href: "#FAQ" },
 ];
 const checkoutBaseUrl = "https://www.latpeed.com/products/ExM3O/pay?theme=light";
+const inquiryUrl = "http://pf.kakao.com/_cxnmMX/chat";
 const heroImageUrl = "https://static.cdn.kmong.com/gigs/sucfA1737080042.jpg?w=359";
 
 const showcaseVideos = [
@@ -202,6 +203,10 @@ export default function Page() {
     window.location.href = targetUrl.toString();
   }
 
+  function handleInquiry() {
+    window.location.href = inquiryUrl;
+  }
+
   return (
     <main className={styles.page}>
       <header className={styles.header}>
@@ -218,7 +223,7 @@ export default function Page() {
             ))}
           </nav>
 
-          <button className={styles.headerCta} type="button">
+          <button className={styles.headerCta} type="button" onClick={handleInquiry}>
             문의하기
           </button>
 
@@ -572,7 +577,7 @@ export default function Page() {
                 <button className={styles.purchaseButton} type="button" onClick={handlePurchase}>
                   구매하기
                 </button>
-                <button className={styles.ghostButton} type="button">
+                <button className={styles.ghostButton} type="button" onClick={handleInquiry}>
                   바로 문의하기
                 </button>
               </div>
@@ -662,7 +667,11 @@ export default function Page() {
         <div className={styles.mobileActionBarInner}>
           <div className={styles.mobileInquiryWrap}>
             <div className={styles.mobileInquiryHint}>평균 응답 10분 이내</div>
-            <button className={`${styles.ghostButton} ${styles.mobileGhostButton}`} type="button">
+            <button
+              className={`${styles.ghostButton} ${styles.mobileGhostButton}`}
+              type="button"
+              onClick={handleInquiry}
+            >
               바로 문의하기
             </button>
           </div>
