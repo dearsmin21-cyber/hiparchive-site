@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { siteConfig } from "./lib/site";
 import styles from "./page.module.css";
 
 const navItems = [
@@ -10,7 +11,7 @@ const navItems = [
 ];
 const checkoutBaseUrl = "https://www.latpeed.com/products/ExM3O/pay?theme=light";
 const inquiryUrl = "http://pf.kakao.com/_cxnmMX/chat";
-const heroImageUrl = "https://static.cdn.kmong.com/gigs/sucfA1737080042.jpg?w=359";
+const heroImageUrl = siteConfig.ogImage;
 
 const showcaseVideos = [
   {
@@ -172,6 +173,47 @@ const packages = [
   },
 ];
 
+const homepageStructuredData = [
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: siteConfig.name,
+    alternateName: siteConfig.fullName,
+    url: siteConfig.url,
+    inLanguage: "ko-KR",
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: siteConfig.name,
+    alternateName: siteConfig.fullName,
+    url: siteConfig.url,
+    logo: `${siteConfig.url}/icon.png`,
+    image: heroImageUrl,
+    sameAs: [inquiryUrl],
+    contactPoint: [
+      {
+        "@type": "ContactPoint",
+        contactType: "customer support",
+        url: inquiryUrl,
+        availableLanguage: ["ko"],
+      },
+    ],
+  },
+  {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: faqItems.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  },
+];
+
 function MainPreviewImage() {
   return (
     <div className={`${styles.previewCard} ${styles.previewFeatured} ${styles.previewImageCard}`}>
@@ -209,6 +251,14 @@ export default function Page() {
 
   return (
     <main className={styles.page}>
+      {homepageStructuredData.map((item) => (
+        <script
+          key={item["@type"]}
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(item) }}
+        />
+      ))}
+
       <header className={styles.header}>
         <div className={styles.headerInner}>
           <div className={styles.brandBlock}>
@@ -276,7 +326,7 @@ export default function Page() {
         <div className={styles.heroCopy}>
           <div className={styles.eyebrow}>CUSTOM LYRIC VIDEO</div>
           <h1 className={styles.heroTitle}>감도높은 고퀄리티 리릭비디오 작업해드립니다</h1>
-          <div className={styles.heroRating} aria-label="평점 4.9, 리뷰 33개">
+          <div className={styles.heroRating} aria-label="평점 4.9, 리뷰 8개">
             <span className={styles.heroStars} aria-hidden="true">
               {Array.from({ length: 5 }).map((_, index) => (
                 <svg
