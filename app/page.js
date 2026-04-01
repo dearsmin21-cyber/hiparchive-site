@@ -457,16 +457,6 @@ export default function Page() {
               4.9 <span className={styles.heroReviewCountMuted}>(8)</span>
             </a>
           </div>
-
-          <div className={styles.miniProfile}>
-            <div className={styles.avatar} aria-hidden="true" />
-            <div className={styles.miniProfileText}>
-              <strong>HipArchive</strong>
-              <span>
-                연락 가능 시간 24시간 · 평균 응답 10분 이내
-              </span>
-            </div>
-          </div>
         </div>
 
         <div className={styles.heroPreview}>
