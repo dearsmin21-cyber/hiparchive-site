@@ -1034,6 +1034,28 @@
   font-weight: 700;
 }
 
+.packageTrustLine {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  margin-top: 9px;
+  color: #84878e;
+  font-size: 0.76rem;
+  line-height: 1.45;
+  letter-spacing: -0.01em;
+}
+
+.packageTrustLine span + span::before {
+  content: "·";
+  margin-right: 10px;
+  color: rgba(17, 17, 20, 0.22);
+}
+
+.packageTrustAccent {
+  color: var(--accent);
+  font-weight: 700;
+}
+
 .packageDescription {
   margin: 16px 0 0;
   color: var(--muted);
@@ -2460,6 +2482,15 @@
   .requiredItemIcon {
     width: 15px;
     height: 15px;
+  }
+
+  .packageTrustLine {
+    gap: 5px 8px;
+    font-size: 0.72rem;
+  }
+
+  .packageTrustLine span + span::before {
+    margin-right: 8px;
   }
 
   .packageDescription {

@@ -284,6 +284,7 @@ export default function Page() {
   const [showMobileServiceDetails, setShowMobileServiceDetails] = useState(false);
   const [showMobilePackagePicker, setShowMobilePackagePicker] = useState(false);
   const [showMobileInquiryHint, setShowMobileInquiryHint] = useState(true);
+  const [mobileInquiryHintReady, setMobileInquiryHintReady] = useState(false);
 
   const activePackage =
     packages.find((item) => item.id === selectedPackage) || packages[0];
@@ -293,7 +294,8 @@ export default function Page() {
     0,
     packages.findIndex((item) => item.id === activePackage.id),
   );
-  const shouldShowMobileInquiryHint = showMobileInquiryHint && !showMobilePackagePicker;
+  const shouldShowMobileInquiryHint =
+    mobileInquiryHintReady && showMobileInquiryHint && !showMobilePackagePicker;
 
   function handlePurchase(packageId = activePackage.id) {
     const targetPackage =
@@ -361,6 +363,14 @@ export default function Page() {
       window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", handleScroll);
     };
+  }, []);
+
+  useEffect(() => {
+    const timer = window.setTimeout(() => {
+      setMobileInquiryHintReady(true);
+    }, 3000);
+
+    return () => window.clearTimeout(timer);
   }, []);
 
   return (
@@ -718,6 +728,14 @@ export default function Page() {
                 ) : null}
               </div>
               <div className={styles.packageSubtitle}>{activePackage.subtitle}</div>
+              <div className={styles.packageTrustLine}>
+                {activePackage.id === "deluxe" ? (
+                  <span className={styles.packageTrustAccent}>가장 많이 선택되는 플랜</span>
+                ) : (
+                  <span>최근 30일 기준 12건 작업</span>
+                )}
+                <span>평균 작업 24시간 이내</span>
+              </div>
               <p className={styles.packageDescription}>{activePackage.description}</p>
 
               <dl className={styles.packageMeta}>
@@ -930,7 +948,7 @@ export default function Page() {
           <strong className={styles.footerName}>HipArchive</strong>
           <div className={styles.footerLinks}>
             <Link href="/trust" className={styles.footerLink}>
-              신뢰 안내
+              환불/규정 안내
             </Link>
           </div>
           <p className={styles.footerMeta}>
