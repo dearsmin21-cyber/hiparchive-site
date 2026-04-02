@@ -139,11 +139,11 @@ const mobileServiceDescription = [
 
 const reviewItems = [
   {
-    author: "active*****",
-    rating: "4.9",
+    author: "pulse*****",
+    rating: "5.0",
     timeline: "작업 기간 1일",
     amount: "주문 금액 5~10만원",
-    text: "어려운 요청도 최대한 맞춰주시고 결과물도 너무 잘 나와서 감사했어요. 다음에도 또 맡기고 싶습니다.",
+    text: "처음부터 끝까지 친절하게 진행해주셨고 결과물도 너무 만족스러웠어요. 편하게 소통할 수 있어서 더 좋았습니다.",
   },
   {
     author: "ve*****",
@@ -160,11 +160,11 @@ const reviewItems = [
     text: "너무 친절하시고 작업도 엄청 꼼꼼하게 해주셨어요. 답장도 빠르시고 결과물도 정말 만족스러웠습니다.",
   },
   {
-    author: "pulse*****",
-    rating: "5.0",
+    author: "active*****",
+    rating: "4.9",
     timeline: "작업 기간 1일",
     amount: "주문 금액 5~10만원",
-    text: "처음부터 끝까지 친절하게 진행해주셨고 결과물도 너무 만족스러웠어요. 편하게 소통할 수 있어서 더 좋았습니다.",
+    text: "어려운 요청도 최대한 맞춰주시고 결과물도 너무 잘 나와서 감사했어요. 다음에도 또 맡기고 싶습니다.",
   },
   {
     author: "haze*****",
