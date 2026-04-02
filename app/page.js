@@ -3,6 +3,13 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { siteConfig } from "./lib/site";
+import {
+  trackInquiryClick,
+  trackNavClick,
+  trackPackageSelection,
+  trackPlanPickerOpen,
+  trackPurchaseClick,
+} from "./lib/analytics";
 import styles from "./page.module.css";
 
 const navItems = [
@@ -297,11 +304,14 @@ export default function Page() {
   const shouldShowMobileInquiryHint =
     mobileInquiryHintReady && showMobileInquiryHint && !showMobilePackagePicker;
 
-  function handlePurchase(packageId = activePackage.id) {
+  function handlePurchase(packageId = activePackage.id, location = "package_card") {
     const targetPackage =
       packages.find((item) => item.id === packageId) || activePackage;
     const optionId = targetPackage?.optionId;
     const targetUrl = new URL(checkoutBaseUrl);
+
+    trackPurchaseClick(targetPackage, location);
+
     if (optionId) {
       targetUrl.searchParams.set("option_id", optionId);
     }
@@ -309,7 +319,8 @@ export default function Page() {
     window.location.href = targetUrl.toString();
   }
 
-  function handleInquiry() {
+  function handleInquiry(location = "general") {
+    trackInquiryClick(location);
     setShowMobilePackagePicker(false);
     window.location.href = inquiryUrl;
   }
@@ -317,10 +328,27 @@ export default function Page() {
   function handleMobilePurchase() {
     if (typeof window !== "undefined" && window.innerWidth <= 860 && !showMobilePackagePicker) {
       setMobileSelectedPackage(selectedPackage);
+      trackPlanPickerOpen(packages.find((item) => item.id === selectedPackage) || packages[0]);
       setShowMobilePackagePicker(true);
       return;
     }
-    handlePurchase(mobileSelectedPackage);
+    handlePurchase(mobileSelectedPackage, "mobile_action_bar");
+  }
+
+  function handleMainPackageSelection(packageId) {
+    const nextPackage = packages.find((item) => item.id === packageId);
+    setSelectedPackage(packageId);
+    if (nextPackage) {
+      trackPackageSelection(nextPackage, "main_package_tabs");
+    }
+  }
+
+  function handleMobilePackageSelection(packageId) {
+    const nextPackage = packages.find((item) => item.id === packageId);
+    setMobileSelectedPackage(packageId);
+    if (nextPackage) {
+      trackPackageSelection(nextPackage, "mobile_plan_picker");
+    }
   }
 
   useEffect(() => {
@@ -396,13 +424,22 @@ export default function Page() {
 
           <nav className={styles.nav} aria-label="섹션 이동">
             {navItems.map((item) => (
-              <a key={item.label} href={item.href} className={styles.navLink}>
+              <a
+                key={item.label}
+                href={item.href}
+                className={styles.navLink}
+                onClick={() => trackNavClick(item.label)}
+              >
                 {item.label}
               </a>
             ))}
           </nav>
 
-          <button className={styles.headerCta} type="button" onClick={handleInquiry}>
+          <button
+            className={styles.headerCta}
+            type="button"
+            onClick={() => handleInquiry("header")}
+          >
             문의하기
           </button>
 
@@ -442,7 +479,10 @@ export default function Page() {
                 key={item.label}
                 href={item.href}
                 className={styles.mobileMenuLink}
-                onClick={() => setMobileMenuOpen(false)}
+                onClick={() => {
+                  trackNavClick(`mobile_${item.label}`);
+                  setMobileMenuOpen(false);
+                }}
               >
                 {item.label}
               </a>
@@ -715,7 +755,7 @@ export default function Page() {
                     item.id === activePackage.id ? styles.packageTabActive : ""
                   }`}
                   type="button"
-                  onClick={() => setSelectedPackage(item.id)}
+                  onClick={() => handleMainPackageSelection(item.id)}
                 >
                   <span className={styles.packageTabName}>{item.name}</span>
                 </button>
@@ -763,10 +803,18 @@ export default function Page() {
               </dl>
 
               <div className={styles.packageActions}>
-                <button className={styles.purchaseButton} type="button" onClick={handlePurchase}>
+                <button
+                  className={styles.purchaseButton}
+                  type="button"
+                  onClick={() => handlePurchase(activePackage.id, "package_card")}
+                >
                   구매하기
                 </button>
-                <button className={styles.ghostButton} type="button" onClick={handleInquiry}>
+                <button
+                  className={styles.ghostButton}
+                  type="button"
+                  onClick={() => handleInquiry("package_card")}
+                >
                   바로 문의하기
                 </button>
               </div>
@@ -905,7 +953,7 @@ export default function Page() {
                 id="mobile-plan-select"
                 className={styles.mobilePlanSelect}
                 value={mobileSelectedPackage}
-                onChange={(event) => setMobileSelectedPackage(event.target.value)}
+                onChange={(event) => handleMobilePackageSelection(event.target.value)}
               >
                 {packages.map((item) => (
                   <option key={item.id} value={item.id}>
@@ -935,7 +983,7 @@ export default function Page() {
             <button
               className={`${styles.ghostButton} ${styles.mobileGhostButton}`}
               type="button"
-              onClick={handleInquiry}
+              onClick={() => handleInquiry("mobile_action_bar")}
             >
               바로 문의하기
             </button>
