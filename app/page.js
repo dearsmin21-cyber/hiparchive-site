@@ -328,6 +328,11 @@ export default function Page() {
       return undefined;
     }
 
+    if (window.innerWidth <= 860) {
+      setSelectedPackage("deluxe");
+      setMobileSelectedPackage("deluxe");
+    }
+
     let ticking = false;
 
     const updateVisibility = () => {
@@ -385,9 +390,9 @@ export default function Page() {
 
       <header className={styles.header}>
         <div className={styles.headerInner}>
-          <div className={styles.brandBlock}>
+          <Link href="/" className={styles.brandBlock}>
             <img className={styles.brandLogo} src="/header-logo.png" alt="HipArchive" />
-          </div>
+          </Link>
 
           <nav className={styles.nav} aria-label="섹션 이동">
             {navItems.map((item) => (
