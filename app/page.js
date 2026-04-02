@@ -322,6 +322,7 @@ export default function Page() {
   const [mobileSelectedPackage, setMobileSelectedPackage] = useState("standard");
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [showAllVideos, setShowAllVideos] = useState(false);
+  const [showAllReviews, setShowAllReviews] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMobileServiceDetails, setShowMobileServiceDetails] = useState(false);
   const [showMobilePackagePicker, setShowMobilePackagePicker] = useState(false);
@@ -338,6 +339,7 @@ export default function Page() {
   );
   const shouldShowMobileInquiryHint =
     mobileInquiryHintReady && showMobileInquiryHint && !showMobilePackagePicker;
+  const visibleReviewItems = showAllReviews ? reviewItems : reviewItems.slice(0, 4);
 
   function handlePurchase(packageId = activePackage.id, location = "package_card") {
     const targetPackage =
@@ -901,7 +903,7 @@ export default function Page() {
           </div>
 
           <div className={styles.reviewGrid}>
-            {reviewItems.map((item) => (
+            {visibleReviewItems.map((item) => (
               <article key={item.author} className={styles.reviewCard}>
                 <div className={styles.reviewCardHead}>
                   <div className={styles.reviewAuthor}>
@@ -932,6 +934,24 @@ export default function Page() {
               </article>
             ))}
           </div>
+
+          {reviewItems.length > 4 ? (
+            <div className={styles.reviewMoreWrap}>
+              <button
+                type="button"
+                className={styles.reviewMoreButton}
+                onClick={() => setShowAllReviews((current) => !current)}
+              >
+                <span>{showAllReviews ? "접기" : "더보기"}</span>
+                <span
+                  className={`${styles.faqIcon} ${styles.videoShowcaseMoreIcon} ${
+                    showAllReviews ? styles.faqIconOpen : ""
+                  }`}
+                  aria-hidden="true"
+                />
+              </button>
+            </div>
+          ) : null}
         </div>
       </section>
 
