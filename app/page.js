@@ -924,11 +924,31 @@ export default function Page() {
           </div>
 
           {reviewItems.length > 4 ? (
-            <div className={styles.reviewMoreWrap}>
+            <div
+              className={styles.reviewMoreWrap}
+              style={{ display: "flex", justifyContent: "center", marginTop: "24px" }}
+            >
               <button
                 type="button"
                 className={styles.reviewMoreButton}
                 onClick={() => setShowAllReviews((current) => !current)}
+                style={{
+                  display: "inline-flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  gap: "6px",
+                  padding: 0,
+                  border: 0,
+                  outline: "none",
+                  background: "transparent",
+                  color: "#5b5e66",
+                  fontSize: "0.88rem",
+                  fontWeight: 700,
+                  letterSpacing: "-0.01em",
+                  cursor: "pointer",
+                  appearance: "none",
+                  WebkitAppearance: "none",
+                }}
               >
                 <span>{showAllReviews ? "접기" : "더보기"}</span>
                 <span
