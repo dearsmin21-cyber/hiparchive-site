@@ -333,6 +333,119 @@
   background: #111114;
 }
 
+.albumPreviewCard {
+  padding: 26px;
+  background:
+    radial-gradient(circle at 72% 28%, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0) 30%),
+    linear-gradient(135deg, #111114 0%, #1d1f24 52%, #2f2222 100%);
+}
+
+.albumPreviewBackdrop {
+  position: absolute;
+  inset: 16px;
+  border-radius: 18px;
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0) 44%),
+    radial-gradient(circle at 24% 30%, rgba(226, 75, 52, 0.18) 0%, rgba(226, 75, 52, 0) 48%);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.albumPreviewArtwork {
+  position: absolute;
+  left: 34px;
+  bottom: 36px;
+  width: 168px;
+  aspect-ratio: 1;
+  border-radius: 16px;
+  background: linear-gradient(145deg, #efdfd8 0%, #b36f5b 48%, #1f1d22 100%);
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.32);
+}
+
+.albumPreviewArtworkInner {
+  position: absolute;
+  inset: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 12px;
+  padding: 14px;
+  background: linear-gradient(180deg, rgba(17, 17, 20, 0.08) 0%, rgba(17, 17, 20, 0.48) 100%);
+  color: #ffffff;
+}
+
+.albumPreviewBadge {
+  align-self: flex-start;
+  min-height: 24px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.14);
+  font-size: 0.68rem;
+  line-height: 24px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+}
+
+.albumPreviewTitle {
+  font-size: 1.2rem;
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.albumPreviewMeta {
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.72rem;
+  line-height: 1.4;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.albumPreviewDisc {
+  position: absolute;
+  right: 72px;
+  top: 68px;
+  width: 138px;
+  aspect-ratio: 1;
+  border-radius: 999px;
+  background:
+    radial-gradient(circle at 50% 50%, #0d0e12 0 14px, #cabeb8 15px 22px, #121317 23px 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.16),
+    0 16px 30px rgba(0, 0, 0, 0.18);
+}
+
+.albumPreviewTracklist {
+  position: absolute;
+  top: 72px;
+  right: 30px;
+  width: 46%;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+  color: rgba(255, 255, 255, 0.88);
+  font-size: 0.84rem;
+  line-height: 1.58;
+  letter-spacing: -0.02em;
+}
+
+.albumPreviewTracklist li {
+  position: relative;
+  padding-left: 14px;
+}
+
+.albumPreviewTracklist li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.72em;
+  width: 5px;
+  height: 5px;
+  border-radius: 999px;
+  background: rgba(226, 75, 52, 0.9);
+  transform: translateY(-50%);
+}
+
 .contentShell {
   position: relative;
   isolation: isolate;
@@ -790,6 +903,119 @@
   box-shadow: 0 18px 34px rgba(17, 17, 20, 0.06);
 }
 
+.albumExampleExtraGrid {
+  display: grid;
+  gap: 18px;
+}
+
+.albumExampleCard {
+  position: relative;
+  overflow: hidden;
+  min-height: 248px;
+  border: 1px solid rgba(17, 17, 20, 0.08);
+  border-radius: 24px;
+  padding: 18px;
+  background: #15161a;
+  box-shadow: 0 18px 34px rgba(17, 17, 20, 0.07);
+}
+
+.albumExampleCardRose {
+  background: linear-gradient(140deg, #1b1313 0%, #7d2a29 42%, #e8d8cf 100%);
+}
+
+.albumExampleCardSand {
+  background: linear-gradient(140deg, #1b1917 0%, #85705f 44%, #ece3d4 100%);
+}
+
+.albumExampleCardNight {
+  background: linear-gradient(140deg, #0f1013 0%, #343846 44%, #8d94a6 100%);
+}
+
+.albumExampleCardMetal {
+  background: linear-gradient(140deg, #141518 0%, #4a5159 48%, #d7dbe2 100%);
+}
+
+.albumExampleCardSunset {
+  background: linear-gradient(140deg, #231515 0%, #d86c5e 46%, #f4d8cf 100%);
+}
+
+.albumExampleCardForest {
+  background: linear-gradient(140deg, #121613 0%, #3d6253 44%, #d6e4da 100%);
+}
+
+.albumExampleTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: rgba(255, 255, 255, 0.82);
+}
+
+.albumExampleLabel {
+  font-size: 0.7rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.albumExampleMark {
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.72);
+  box-shadow: 0 0 0 4px rgba(255, 255, 255, 0.16);
+}
+
+.albumExampleArt {
+  margin-top: 20px;
+  min-height: 148px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(17, 17, 20, 0.08) 0%, rgba(17, 17, 20, 0.38) 100%);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.12);
+}
+
+.albumExampleArtInner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 18px;
+  color: #ffffff;
+}
+
+.albumExampleArtInner strong {
+  font-size: 1.24rem;
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+
+.albumExampleArtInner span {
+  margin-top: 8px;
+  color: rgba(255, 255, 255, 0.78);
+  font-size: 0.82rem;
+  line-height: 1.5;
+}
+
+.albumExampleTagList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.albumExampleTagList span {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.18);
+  color: #ffffff;
+  font-size: 0.74rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
 .faqList {
   display: grid;
   gap: 14px;
@@ -876,6 +1102,17 @@
   margin: 0;
   color: var(--muted);
   line-height: 1.75;
+}
+
+.albumInfoText {
+  margin: 14px 0 0;
+  color: var(--muted);
+  font-size: 0.94rem;
+  line-height: 1.75;
+}
+
+.albumInfoText:first-of-type {
+  margin-top: 12px;
 }
 
 .sidebar {
@@ -1452,6 +1689,36 @@
   line-height: 1.75;
 }
 
+.reviewMoreWrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.reviewMoreButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #5b5e66;
+  font-size: 0.88rem;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  cursor: pointer;
+  transition:
+    transform 0.18s ease,
+    color 0.18s ease;
+}
+
+.reviewMoreButton:hover {
+  transform: translateY(-1px);
+  color: #1f2024;
+}
+
 .headerCta:hover,
 .purchaseButton:hover,
 .ghostButton:hover,
@@ -1514,6 +1781,10 @@
 
   .reviewGrid {
     grid-template-columns: 1fr;
+  }
+
+  .reviewMoreWrap {
+    margin-top: 22px;
   }
 
   .sidebar {
@@ -1632,6 +1903,43 @@
     flex: 1 1 auto;
     width: 100%;
     aspect-ratio: 16 / 10.8;
+  }
+
+  .albumPreviewCard {
+    padding: 22px 20px;
+  }
+
+  .albumPreviewArtwork {
+    left: 22px;
+    bottom: 26px;
+    width: 140px;
+  }
+
+  .albumPreviewDisc {
+    right: 32px;
+    top: 42px;
+    width: 108px;
+  }
+
+  .albumPreviewTracklist {
+    top: 44px;
+    right: 22px;
+    width: 45%;
+    gap: 8px;
+    font-size: 0.74rem;
+  }
+
+  .albumExampleCard {
+    min-height: 228px;
+    padding: 16px;
+  }
+
+  .albumExampleArt {
+    min-height: 132px;
+  }
+
+  .albumExampleArtInner strong {
+    font-size: 1.08rem;
   }
 
   .miniProfile {
@@ -2313,6 +2621,78 @@
   .previewFeatured {
     width: 100%;
     aspect-ratio: 16 / 11.4;
+  }
+
+  .albumPreviewCard {
+    padding: 18px 16px;
+  }
+
+  .albumPreviewArtwork {
+    left: 16px;
+    bottom: 20px;
+    width: 118px;
+    border-radius: 14px;
+  }
+
+  .albumPreviewArtworkInner {
+    inset: 12px;
+    padding: 10px;
+  }
+
+  .albumPreviewTitle {
+    font-size: 0.94rem;
+  }
+
+  .albumPreviewMeta {
+    font-size: 0.64rem;
+  }
+
+  .albumPreviewDisc {
+    right: 20px;
+    top: 30px;
+    width: 86px;
+  }
+
+  .albumPreviewTracklist {
+    top: 28px;
+    right: 16px;
+    width: 48%;
+    gap: 7px;
+    font-size: 0.66rem;
+    line-height: 1.45;
+  }
+
+  .albumPreviewTracklist li {
+    padding-left: 11px;
+  }
+
+  .albumExampleCard {
+    min-height: 206px;
+    border-radius: 20px;
+    padding: 14px;
+  }
+
+  .albumExampleArt {
+    min-height: 116px;
+    border-radius: 16px;
+  }
+
+  .albumExampleArtInner {
+    padding: 14px;
+  }
+
+  .albumExampleArtInner strong {
+    font-size: 0.98rem;
+  }
+
+  .albumExampleArtInner span {
+    font-size: 0.76rem;
+  }
+
+  .albumExampleTagList span {
+    min-height: 26px;
+    padding: 0 9px;
+    font-size: 0.7rem;
   }
 
   .heroRating {
