@@ -658,6 +658,12 @@ export default function Page() {
                   </div>
                 ))}
               </div>
+              <div
+                className={styles.heroMediaSwipeLayer}
+                aria-hidden="true"
+                onTouchStart={handleHeroTouchStart}
+                onTouchEnd={handleHeroTouchEnd}
+              />
             </div>
 
             <div className={styles.heroMediaFooter}>
