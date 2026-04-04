@@ -24,7 +24,7 @@ const heroMediaItems = [
   {
     id: "video",
     type: "video",
-    src: "https://player.vimeo.com/video/1047390056?h=de5a6af5be&title=0&byline=0&portrait=0",
+    src: "https://player.vimeo.com/video/1178139945?title=0&byline=0&portrait=0",
     title: "리릭비디오 대표 작업 영상",
   },
   {
