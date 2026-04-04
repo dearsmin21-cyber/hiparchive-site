@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { siteConfig } from "./lib/site";
 import {
   trackInquiryClick,
@@ -20,6 +20,20 @@ const navItems = [
 const checkoutBaseUrl = "https://www.latpeed.com/products/ExM3O/pay?theme=light";
 const inquiryUrl = "http://pf.kakao.com/_cxnmMX/chat";
 const heroImageUrl = siteConfig.heroImage;
+const heroMediaItems = [
+  {
+    id: "video",
+    type: "video",
+    src: "https://player.vimeo.com/video/1047390056?h=de5a6af5be&title=0&byline=0&portrait=0",
+    title: "리릭비디오 대표 작업 영상",
+  },
+  {
+    id: "image",
+    type: "image",
+    src: heroImageUrl,
+    title: "리릭비디오 대표 작업 이미지",
+  },
+];
 
 const showcaseVideos = [
   {
@@ -297,37 +311,38 @@ const homepageStructuredData = [
   },
 ];
 
-function MainPreviewImage() {
-  return (
-    <div className={`${styles.previewCard} ${styles.previewFeatured} ${styles.previewImageCard}`}>
-      <img className={styles.previewImage} src={heroImageUrl} alt="리릭비디오 대표 작업 예시" />
-    </div>
-  );
-}
-
 export default function Page() {
   const [selectedPackage, setSelectedPackage] = useState("standard");
-  const [mobileSelectedPackage, setMobileSelectedPackage] = useState("standard");
+  const [mobileSelectedPackage, setMobileSelectedPackage] = useState("");
+  const [activeHeroMediaIndex, setActiveHeroMediaIndex] = useState(0);
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [showAllVideos, setShowAllVideos] = useState(false);
-  const [showAllReviews, setShowAllReviews] = useState(false);
+  const [currentReviewPage, setCurrentReviewPage] = useState(1);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [showMobileServiceDetails, setShowMobileServiceDetails] = useState(false);
   const [showMobilePackagePicker, setShowMobilePackagePicker] = useState(false);
   const [showMobileInquiryHint, setShowMobileInquiryHint] = useState(true);
   const [mobileInquiryHintReady, setMobileInquiryHintReady] = useState(false);
+  const [animateReviewBreakdown, setAnimateReviewBreakdown] = useState(false);
+  const heroTouchStartX = useRef(null);
+  const reviewSectionRef = useRef(null);
 
   const activePackage =
     packages.find((item) => item.id === selectedPackage) || packages[0];
   const mobileActivePackage =
-    packages.find((item) => item.id === mobileSelectedPackage) || activePackage;
+    packages.find((item) => item.id === mobileSelectedPackage) || null;
   const activePackageIndex = Math.max(
     0,
     packages.findIndex((item) => item.id === activePackage.id),
   );
+  const reviewsPerPage = 4;
+  const reviewPageCount = Math.ceil(reviewItems.length / reviewsPerPage);
   const shouldShowMobileInquiryHint =
     mobileInquiryHintReady && showMobileInquiryHint && !showMobilePackagePicker;
-  const visibleReviewItems = showAllReviews ? reviewItems : reviewItems.slice(0, 4);
+  const visibleReviewItems = reviewItems.slice(
+    (currentReviewPage - 1) * reviewsPerPage,
+    currentReviewPage * reviewsPerPage,
+  );
 
   function handlePurchase(packageId = activePackage.id, location = "package_card") {
     const targetPackage =
@@ -352,11 +367,15 @@ export default function Page() {
 
   function handleMobilePurchase() {
     if (typeof window !== "undefined" && window.innerWidth <= 860 && !showMobilePackagePicker) {
-      setMobileSelectedPackage(selectedPackage);
       trackPlanPickerOpen(packages.find((item) => item.id === selectedPackage) || packages[0]);
       setShowMobilePackagePicker(true);
       return;
     }
+
+    if (!mobileSelectedPackage) {
+      return;
+    }
+
     handlePurchase(mobileSelectedPackage, "mobile_action_bar");
   }
 
@@ -383,7 +402,6 @@ export default function Page() {
 
     if (window.innerWidth <= 860) {
       setSelectedPackage("deluxe");
-      setMobileSelectedPackage("deluxe");
     }
 
     let ticking = false;
@@ -430,6 +448,80 @@ export default function Page() {
 
     return () => window.clearTimeout(timer);
   }, []);
+
+  useEffect(() => {
+    if (typeof window === "undefined") {
+      return undefined;
+    }
+
+    const target = reviewSectionRef.current;
+
+    if (!target) {
+      return undefined;
+    }
+
+    if (!("IntersectionObserver" in window)) {
+      setAnimateReviewBreakdown(true);
+      return undefined;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0]?.isIntersecting) {
+          setAnimateReviewBreakdown(true);
+          observer.disconnect();
+        }
+      },
+      { threshold: 0.3 },
+    );
+
+    observer.observe(target);
+
+    return () => observer.disconnect();
+  }, []);
+
+  function handleHeroMediaSelect(index) {
+    setActiveHeroMediaIndex(index);
+  }
+
+  function handleHeroMediaMove(direction) {
+    setActiveHeroMediaIndex((current) => {
+      const next = current + direction;
+
+      if (next < 0) {
+        return heroMediaItems.length - 1;
+      }
+
+      if (next >= heroMediaItems.length) {
+        return 0;
+      }
+
+      return next;
+    });
+  }
+
+  function handleHeroTouchStart(event) {
+    heroTouchStartX.current = event.touches[0]?.clientX ?? null;
+  }
+
+  function handleHeroTouchEnd(event) {
+    const startX = heroTouchStartX.current;
+    const endX = event.changedTouches[0]?.clientX ?? null;
+
+    heroTouchStartX.current = null;
+
+    if (startX === null || endX === null) {
+      return;
+    }
+
+    const deltaX = startX - endX;
+
+    if (Math.abs(deltaX) < 40) {
+      return;
+    }
+
+    handleHeroMediaMove(deltaX > 0 ? 1 : -1);
+  }
 
   return (
     <main className={styles.page}>
@@ -540,7 +632,55 @@ export default function Page() {
         </div>
 
         <div className={styles.heroPreview}>
-          <MainPreviewImage />
+          <div className={`${styles.previewCard} ${styles.previewFeatured} ${styles.previewImageCard}`}>
+            <div
+              className={styles.heroMediaViewport}
+              onTouchStart={handleHeroTouchStart}
+              onTouchEnd={handleHeroTouchEnd}
+            >
+              <div
+                className={styles.heroMediaTrack}
+                style={{ transform: `translateX(-${activeHeroMediaIndex * 100}%)` }}
+              >
+                {heroMediaItems.map((item) => (
+                  <div key={item.id} className={styles.heroMediaSlide}>
+                    {item.type === "video" ? (
+                      <iframe
+                        className={styles.heroMediaFrame}
+                        src={item.src}
+                        title={item.title}
+                        allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media"
+                        allowFullScreen
+                      />
+                    ) : (
+                      <img className={styles.previewImage} src={item.src} alt={item.title} />
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className={styles.heroMediaFooter}>
+              <div className={styles.heroMediaDots} role="tablist" aria-label="메인 미디어 선택">
+                {heroMediaItems.map((item, index) => (
+                  <button
+                    key={item.id}
+                    type="button"
+                    role="tab"
+                    aria-selected={activeHeroMediaIndex === index}
+                    aria-label={`${index + 1}번 미디어 보기`}
+                    className={`${styles.heroMediaDot} ${
+                      activeHeroMediaIndex === index ? styles.heroMediaDotActive : ""
+                    }`}
+                    onClick={() => handleHeroMediaSelect(index)}
+                  />
+                ))}
+              </div>
+              <span className={styles.heroMediaCounter}>
+                {String(activeHeroMediaIndex + 1).padStart(2, "0")} / {String(heroMediaItems.length).padStart(2, "0")}
+              </span>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -848,7 +988,7 @@ export default function Page() {
         </aside>
       </section>
 
-      <section id="리뷰" className={styles.reviewSection}>
+      <section id="리뷰" ref={reviewSectionRef} className={styles.reviewSection}>
         <div className={styles.reviewSectionInner}>
           <div className={styles.sectionHead}>
             <h2 className={styles.sectionTitle}>작업 리뷰 (8)</h2>
@@ -875,13 +1015,18 @@ export default function Page() {
             </div>
 
             <div className={styles.reviewMobileBreakdown}>
-              {reviewBreakdown.map((item) => (
+              {reviewBreakdown.map((item, index) => (
                 <div key={item.label} className={styles.reviewMobileMetric}>
                   <span className={styles.reviewMobileMetricLabel}>{item.label}</span>
                   <div className={styles.reviewMobileMetricTrack} aria-hidden="true">
                     <span
-                      className={styles.reviewMobileMetricFill}
-                      style={{ width: `${(item.score / 5) * 100}%` }}
+                      className={`${styles.reviewMobileMetricFill} ${
+                        animateReviewBreakdown ? styles.reviewMobileMetricFillActive : ""
+                      }`}
+                      style={{
+                        "--review-fill-width": `${(item.score / 5) * 100}%`,
+                        "--review-fill-delay": `${index * 120}ms`,
+                      }}
                     />
                   </div>
                   <span className={styles.reviewMobileMetricValue}>{item.score.toFixed(1)}</span>
@@ -923,45 +1068,40 @@ export default function Page() {
             ))}
           </div>
 
-          {reviewItems.length > 4 ? (
-            <div
-              className={styles.reviewMoreWrap}
-              style={{ display: "flex", justifyContent: "center", marginTop: "24px" }}
-            >
-              <button
-                type="button"
-                className={styles.reviewMoreButton}
-                onClick={() => setShowAllReviews((current) => !current)}
-                style={{
-                  display: "inline-flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  gap: "6px",
-                  padding: 0,
-                  border: 0,
-                  outline: "none",
-                  background: "transparent",
-                  color: "#5b5e66",
-                  fontSize: "0.88rem",
-                  fontWeight: 700,
-                  letterSpacing: "-0.01em",
-                  cursor: "pointer",
-                  appearance: "none",
-                  WebkitAppearance: "none",
-                }}
-              >
-                <span>{showAllReviews ? "접기" : "더보기"}</span>
-                <span
-                  className={`${styles.faqIcon} ${styles.videoShowcaseMoreIcon} ${
-                    showAllReviews ? styles.faqIconOpen : ""
-                  }`}
-                  aria-hidden="true"
-                />
-              </button>
+          {reviewPageCount > 1 ? (
+            <div className={styles.reviewPaginationWrap}>
+              <div className={styles.reviewPagination} aria-label="리뷰 페이지 이동">
+                {Array.from({ length: reviewPageCount }).map((_, index) => {
+                  const page = index + 1;
+
+                  return (
+                    <button
+                      key={page}
+                      type="button"
+                      className={`${styles.reviewPaginationButton} ${
+                        currentReviewPage === page ? styles.reviewPaginationButtonActive : ""
+                      }`}
+                      aria-current={currentReviewPage === page ? "page" : undefined}
+                      onClick={() => setCurrentReviewPage(page)}
+                    >
+                      {page}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           ) : null}
         </div>
       </section>
+
+      {showMobilePackagePicker ? (
+        <button
+          type="button"
+          className={styles.mobilePlanBackdrop}
+          aria-label="플랜 선택 닫기"
+          onClick={() => setShowMobilePackagePicker(false)}
+        />
+      ) : null}
 
       <div className={styles.mobileActionBar}>
         <div className={styles.mobileActionBarInner}>
@@ -971,45 +1111,26 @@ export default function Page() {
               showMobilePackagePicker ? styles.mobilePlanPickerOpen : ""
             }`}
           >
+            <button
+              type="button"
+              className={styles.mobilePlanPickerDismiss}
+              aria-label="플랜 선택 닫기"
+              onClick={() => setShowMobilePackagePicker(false)}
+            >
+              <span className={styles.mobilePlanPickerHandle} aria-hidden="true" />
+            </button>
             <div className={styles.mobilePlanPickerTop}>
               <div>
-                <div className={styles.mobilePlanPickerLabel}>구매 플랜 선택</div>
-                <div className={styles.mobilePlanPickerHint}>선택한 플랜으로 결제 페이지가 열립니다.</div>
+                <div className={styles.mobilePlanPickerLabel}>선택옵션</div>
+                <div className={styles.mobilePlanPickerHint}>
+                  플랜을 선택한 뒤 아래 구매하기 버튼을 눌러주세요.
+                </div>
               </div>
-              <button
-                type="button"
-                className={styles.mobilePlanPickerClose}
-                aria-label="플랜 선택 닫기"
-                onClick={() => setShowMobilePackagePicker(false)}
-              >
-                <svg
-                  className={styles.mobilePlanPickerCloseIcon}
-                  viewBox="0 0 16 16"
-                  fill="none"
-                  aria-hidden="true"
-                >
-                  <path
-                    d="M4 4l8 8M12 4 4 12"
-                    stroke="currentColor"
-                    strokeWidth="1.8"
-                    strokeLinecap="round"
-                  />
-                </svg>
-              </button>
             </div>
 
-            {mobileActivePackage.benefitLabel ? (
+            {mobileActivePackage?.benefitLabel ? (
               <div className={styles.mobilePlanPickerBenefit}>{mobileActivePackage.benefitLabel}</div>
             ) : null}
-
-            <div className={styles.mobilePlanPickerPriceRow}>
-              <strong className={styles.mobilePlanPickerPrice}>{mobileActivePackage.price}</strong>
-              {mobileActivePackage.originalPrice ? (
-                <span className={styles.mobilePlanPickerOriginalPrice}>
-                  {mobileActivePackage.originalPrice}
-                </span>
-              ) : null}
-            </div>
 
             <div className={styles.mobilePlanSelectWrap}>
               <select
@@ -1018,6 +1139,7 @@ export default function Page() {
                 value={mobileSelectedPackage}
                 onChange={(event) => handleMobilePackageSelection(event.target.value)}
               >
+                <option value="">플랜을 선택해주세요</option>
                 {packages.map((item) => (
                   <option key={item.id} value={item.id}>
                     {item.name} · {item.price}
@@ -1026,9 +1148,36 @@ export default function Page() {
                 ))}
               </select>
             </div>
+
+            {mobileActivePackage ? (
+              <div className={styles.mobilePlanPickerTotal}>
+                <span className={styles.mobilePlanPickerTotalLabel}>총 상품금액(1개)</span>
+                <div className={styles.mobilePlanPickerTotalValueWrap}>
+                  <strong className={styles.mobilePlanPickerTotalValue}>{mobileActivePackage.price}</strong>
+                  {mobileActivePackage.originalPrice ? (
+                    <span className={styles.mobilePlanPickerOriginalPrice}>
+                      {mobileActivePackage.originalPrice}
+                    </span>
+                  ) : null}
+                </div>
+              </div>
+            ) : null}
+
+            <button
+              className={styles.mobilePlanPickerActionButton}
+              type="button"
+              onClick={() => handlePurchase(mobileSelectedPackage, "mobile_action_bar")}
+              disabled={!mobileSelectedPackage}
+            >
+              구매하기
+            </button>
           </div>
 
-          <div className={styles.mobileInquiryWrap}>
+          <div
+            className={`${styles.mobileInquiryWrap} ${
+              showMobilePackagePicker ? styles.mobileInquiryWrapHidden : ""
+            }`}
+          >
             <div
               className={styles.mobileInquiryHint}
               aria-hidden={!shouldShowMobileInquiryHint}
@@ -1051,15 +1200,17 @@ export default function Page() {
               바로 문의하기
             </button>
           </div>
-          <button
-            className={`${styles.purchaseButton} ${styles.mobilePurchaseButton}`}
-            type="button"
-            onClick={handleMobilePurchase}
-            aria-expanded={showMobilePackagePicker}
-            aria-controls="mobile-plan-picker"
-          >
-            구매하기
-          </button>
+          {!showMobilePackagePicker ? (
+            <button
+              className={`${styles.purchaseButton} ${styles.mobilePurchaseButton}`}
+              type="button"
+              onClick={handleMobilePurchase}
+              aria-expanded={showMobilePackagePicker}
+              aria-controls="mobile-plan-picker"
+            >
+              구매하기
+            </button>
+          ) : null}
         </div>
       </div>
 
